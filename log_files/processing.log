@@ -1,0 +1,1306 @@
+---------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proyecto\pro
+> cessing.log
+  log type:  text
+ opened on:  22 Oct 2026, 20:29:23
+
+. 
+. *** Working directory path 
+. global path_home "C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proye
+> cto" 
+
+. global path_out "$path_home\out_data"
+
+. global path_ado "$path_home\ado"
+
+. 
+. 
+. *** Leemos la base de datos en 1.save_dta.do
+. use "$path_home/base.dta", clear 
+
+. 
+. /*
+> 
+> 2.1 Creación de nuevas variables de interés
+> 
+> */
+. 
+. *** Creamos una nueva variable id_cluster
+. clonevar id = ID_anon
+
+. lab var id "individual id"
+
+. duplicates report ID_anon // chequeamos si hay duplicados
+
+Duplicates in terms of ID_anon
+
+--------------------------------------
+   Copies | Observations       Surplus
+----------+---------------------------
+        1 |          310             0
+--------------------------------------
+
+. 
+. *** Limpiamos la variable comunidad
+. * Creamos una varibale cluster codificada con las etiquetas de cada comunidad
+. gen str50 comunidad_clean = strtrim(itrim(Comunidad))
+(4 missing values generated)
+
+. 
+. * Estandarizamos variaciones de mayúsculas/minúsculas y faltas de ortografía a 
+> un nombre base oficial:
+. replace comunidad_clean = "Batzacon" if inlist(comunidad_clean, "BATZACON", "Ba
+> tzacon", "Bazacon","Balzacon")
+(5 real changes made)
+
+. replace comunidad_clean = "Balsayan" if comunidad_clean == "Balsayan"
+(0 real changes made)
+
+. replace comunidad_clean = "Calshi" if inlist(comunidad_clean, "CALSHI", "Calshi
+> ")
+(1 real change made)
+
+. replace comunidad_clean = "Cadeate" if comunidad_clean == "Cadeate"
+(0 real changes made)
+
+. replace comunidad_clean = "Cuatro esquinas" if comunidad_clean == "Cuatro esqui
+> nas"
+(0 real changes made)
+
+. replace comunidad_clean = "Curía" if comunidad_clean == "Curia"
+(1 real change made)
+
+. replace comunidad_clean = "Dos Mangas" if inlist(comunidad_clean, "Dos Mangas",
+>  "Dos mangas")
+(5 real changes made)
+
+. replace comunidad_clean = "La Esperanza" if inlist(comunidad_clean, "La Esperan
+> za", "La esperanza")
+(3 real changes made)
+
+. replace comunidad_clean = "La Silveria" if inlist(comunidad_clean,"La Silveria"
+> , "Silveria")
+(3 real changes made)
+
+. replace comunidad_clean = "Laturun" if inlist(comunidad_clean, "Latarun", "Latu
+> rum", "Laturun")
+(2 real changes made)
+
+. replace comunidad_clean = "Libertador Bolívar" if inlist(comunidad_clean, "Libe
+> rtador Bolibar", "Libertador Bolivar", "Libertador Bolívar", "Libertador bolivi
+> ar", "Libertador bolívar")
+(13 real changes made)
+
+. replace comunidad_clean = "Miraflores" if comunidad_clean == "Miraflores"
+(0 real changes made)
+
+. replace comunidad_clean = "Montañita" if comunidad_clean == "Montañita"
+(0 real changes made)
+
+. replace comunidad_clean = "Pulingui" if inlist(comunidad_clean, "PULINGUI", "Pu
+> lingui", "Pulingüi", "Pulingui San Pablo", "Pulingui San pablo")
+(9 real changes made)
+
+. replace comunidad_clean = "Pajiza" if inlist(comunidad_clean,"Pajiza", "Pajilla
+> les")
+(1 real change made)
+
+. replace comunidad_clean = "Paquibug San Gerardo" if inlist(comunidad_clean, "Pa
+> quibug San Gerardo", "Paquibug San gerardo", "paquibug San gerardo")
+(2 real changes made)
+
+. replace comunidad_clean = "Paquibug San Pablo" if inlist(comunidad_clean, "Paqu
+> ibug San Pablo", "Paquibug San pablo")
+(1 real change made)
+
+. replace comunidad_clean = "Punguiño" if comunidad_clean == "Punguiño"
+(0 real changes made)
+
+. replace comunidad_clean = "Sigsipamba" if inlist(comunidad_clean, "SIGSIPAMBA",
+>  "Sigsibamba", "Sigsipamba")
+(3 real changes made)
+
+. replace comunidad_clean = "San José" if inlist(comunidad_clean, "San  José", "S
+> an Jose", "San José", "Sn Antonio")
+(2 real changes made)
+
+. replace comunidad_clean = "San Andrés Barrio Santa Rosa" if comunidad_clean == 
+> "San Andrés Barrio Santa Rosa"
+(0 real changes made)
+
+. replace comunidad_clean = "San Antonio" if inlist(comunidad_clean, "San Antonio
+> ", "Sn Antonio")
+(0 real changes made)
+
+. replace comunidad_clean = "San Pablo" if comunidad_clean == "San Pablo"
+(0 real changes made)
+
+. replace comunidad_clean = "San Pedro" if comunidad_clean == "San Pedro"
+(0 real changes made)
+
+. replace comunidad_clean = "Sanjapamba" if comunidad_clean == "Sanjapamba"
+(0 real changes made)
+
+. replace comunidad_clean = "Santa Lucia" if comunidad_clean == "Santa Lucia"
+(0 real changes made)
+
+. replace comunidad_clean = "Santa Rosa" if comunidad_clean == "Santa Rosa"
+(0 real changes made)
+
+. replace comunidad_clean = "Sinchal" if inlist(comunidad_clean, "Sincha", "Sinch
+> al", "Sinchali")
+(15 real changes made)
+
+. replace comunidad_clean = "Singla" if comunidad_clean == "Singla"
+(0 real changes made)
+
+. replace comunidad_clean = "Sonchale" if comunidad_clean == "Sonchale"
+(0 real changes made)
+
+. replace comunidad_clean = "Tulun" if comunidad_clean == "Tulun"
+(0 real changes made)
+
+. replace comunidad_clean = "Tunsalao" if comunidad_clean == "Tunsalao"
+(0 real changes made)
+
+. 
+. * codificamos la variable original creando la variable 'comunidad'
+. encode comunidad_clean, gen(comunidad) 
+
+. tab comunidad, m  // verificamos la nueva codificación
+
+                   comunidad |      Freq.     Percent        Cum.
+-----------------------------+-----------------------------------
+                    Balsayan |          1        0.32        0.32
+                    Batzacon |         11        3.55        3.87
+                     Cadeate |          1        0.32        4.19
+                      Calshi |          7        2.26        6.45
+             Cuatro esquinas |          7        2.26        8.71
+                       Curía |          1        0.32        9.03
+                  Dos Mangas |         16        5.16       14.19
+                La Esperanza |          4        1.29       15.48
+                 La Silveria |          7        2.26       17.74
+                     Laturun |          8        2.58       20.32
+          Libertador Bolívar |         14        4.52       24.84
+                  Miraflores |          2        0.65       25.48
+                   Montañita |          9        2.90       28.39
+                      Pajiza |          4        1.29       29.68
+        Paquibug San Gerardo |         11        3.55       33.23
+          Paquibug San Pablo |          9        2.90       36.13
+                    Pulingui |         40       12.90       49.03
+                    Punguiño |          1        0.32       49.35
+San Andrés Barrio Santa Rosa |          1        0.32       49.68
+                 San Antonio |         30        9.68       59.35
+                    San José |         22        7.10       66.45
+                   San Pablo |         16        5.16       71.61
+                   San Pedro |         13        4.19       75.81
+                  Sanjapamba |          5        1.61       77.42
+                 Santa Lucia |          1        0.32       77.74
+                  Santa Rosa |          1        0.32       78.06
+                  Sigsipamba |          7        2.26       80.32
+                     Sinchal |         44       14.19       94.52
+                      Singla |          1        0.32       94.84
+                    Sonchale |          1        0.32       95.16
+                       Tulun |          1        0.32       95.48
+                    Tunsalao |         10        3.23       98.71
+                           . |          4        1.29      100.00
+-----------------------------+-----------------------------------
+                       Total |        310      100.00
+
+. codebook comunidad
+
+---------------------------------------------------------------------------------
+comunidad                                                             (unlabeled)
+---------------------------------------------------------------------------------
+
+                  Type: Numeric (long)
+                 Label: comunidad
+
+                 Range: [1,32]                        Units: 1
+         Unique values: 32                        Missing .: 4/310
+
+              Examples: 10    Laturun
+                        17    Pulingui
+                        21    San José
+                        27    Sigsipamba
+
+. 
+. *** Limpiamos la variable Parroquiademuestra
+. * parecido al caso de las comunidades
+. gen parroquia_str = strtrim(itrim(Parroquiademuestra))
+
+. * codificamos la variable original creando la variable 'parroquia'
+. encode parroquia_str, gen(parroquia)
+
+. tab parroquia, m  // verificamos la nueva codificación
+
+               parroquia |      Freq.     Percent        Cum.
+-------------------------+-----------------------------------
+Manglaralto, Santa Elena |        154       49.68       49.68
+       San Andres, Guano |        156       50.32      100.00
+-------------------------+-----------------------------------
+                   Total |        310      100.00
+
+. codebook parroquia
+
+---------------------------------------------------------------------------------
+parroquia                                                             (unlabeled)
+---------------------------------------------------------------------------------
+
+                  Type: Numeric (long)
+                 Label: parroquia
+
+                 Range: [1,2]                         Units: 1
+         Unique values: 2                         Missing .: 0/310
+
+            Tabulation: Freq.   Numeric  Label
+                          154         1  Manglaralto, Santa Elena
+                          156         2  San Andres, Guano
+
+.                 
+. *** Variable: genero ***
+. gen genero = 1 if Cuáleselsexodelniñoon == "Masculino"
+(152 missing values generated)
+
+. replace genero = 2 if Cuáleselsexodelniñoon == "Femenino"
+(152 real changes made)
+
+. * creamos la etiqueta de valores
+. label define sex_lbl 1 "Masculino" 2 "Femenino"
+
+. * asignamos la etiqueta a la nueva variable numérica
+. label values genero sex_lbl
+
+. * Chequeamos
+. tab genero, m
+
+     genero |      Freq.     Percent        Cum.
+------------+-----------------------------------
+  Masculino |        158       50.97       50.97
+   Femenino |        152       49.03      100.00
+------------+-----------------------------------
+      Total |        310      100.00
+
+. codebook genero
+
+---------------------------------------------------------------------------------
+genero                                                                (unlabeled)
+---------------------------------------------------------------------------------
+
+                  Type: Numeric (float)
+                 Label: sex_lbl
+
+                 Range: [1,2]                         Units: 1
+         Unique values: 2                         Missing .: 0/310
+
+            Tabulation: Freq.   Numeric  Label
+                          158         1  Masculino
+                          152         2  Femenino
+
+. 
+. *** Variable: edad_meses
+. gen edad_meses = Edaddelniñoaenmeses
+(5 missing values generated)
+
+. * Chequeamos si es numérica
+. desc edad_meses
+
+Variable      Storage   Display    Value
+    name         type    format    label      Variable label
+---------------------------------------------------------------------------------
+edad_meses      float   %9.0g                 
+
+. tab edad_meses, m               // 5 observacioes faltantes
+
+ edad_meses |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |          2        0.65        0.65
+          1 |          9        2.90        3.55
+          2 |          7        2.26        5.81
+          3 |          9        2.90        8.71
+          4 |          6        1.94       10.65
+          5 |          1        0.32       10.97
+          6 |         10        3.23       14.19
+          7 |          3        0.97       15.16
+          8 |          8        2.58       17.74
+          9 |          8        2.58       20.32
+         10 |          7        2.26       22.58
+         11 |          5        1.61       24.19
+         12 |         10        3.23       27.42
+         13 |          9        2.90       30.32
+         14 |          8        2.58       32.90
+         15 |          6        1.94       34.84
+         16 |          4        1.29       36.13
+         17 |          9        2.90       39.03
+         18 |          9        2.90       41.94
+         19 |         13        4.19       46.13
+         20 |          4        1.29       47.42
+         21 |          5        1.61       49.03
+         22 |          4        1.29       50.32
+         23 |         15        4.84       55.16
+         24 |          7        2.26       57.42
+         25 |          3        0.97       58.39
+         26 |          5        1.61       60.00
+         27 |          3        0.97       60.97
+         28 |          6        1.94       62.90
+         29 |          6        1.94       64.84
+         30 |          3        0.97       65.81
+         31 |          4        1.29       67.10
+         32 |          2        0.65       67.74
+         33 |          4        1.29       69.03
+         34 |          7        2.26       71.29
+         35 |          4        1.29       72.58
+         36 |          6        1.94       74.52
+         37 |          3        0.97       75.48
+         38 |          3        0.97       76.45
+         39 |          3        0.97       77.42
+         40 |          1        0.32       77.74
+         41 |          4        1.29       79.03
+         42 |          4        1.29       80.32
+         44 |          1        0.32       80.65
+         45 |          2        0.65       81.29
+         46 |          3        0.97       82.26
+         47 |          4        1.29       83.55
+         48 |         11        3.55       87.10
+         49 |          3        0.97       88.06
+         50 |          1        0.32       88.39
+         51 |          1        0.32       88.71
+         52 |          3        0.97       89.68
+         53 |          5        1.61       91.29
+         54 |          7        2.26       93.55
+         55 |          3        0.97       94.52
+         56 |          3        0.97       95.48
+         57 |          3        0.97       96.45
+         58 |          1        0.32       96.77
+         59 |          4        1.29       98.06
+         60 |          1        0.32       98.39
+          . |          5        1.61      100.00
+------------+-----------------------------------
+      Total |        310      100.00
+
+. gen  str6 ageunit = "months" 
+
+. lab var ageunit "months"
+
+. 
+. sum edad_meses
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+  edad_meses |        305    24.62623    16.50951          0         60
+
+. 
+. 
+. /*
+> 
+> 2.2 Creación de la variable resultado
+> 
+> */
+. 
+. * Variable: weight *** (en kg)
+. clonevar weight = Pesoactualenkg
+(17 missing values generated)
+
+. codebook weight, tab(9999)      // chequeamos si hay valores fuera del rango
+
+---------------------------------------------------------------------------------
+weight                                                          Peso actual en kg
+---------------------------------------------------------------------------------
+
+                  Type: Numeric (double)
+
+                 Range: [.91,2350]                    Units: .001
+         Unique values: 269                       Missing .: 17/310
+
+            Tabulation: Freq.  Value
+                            1  .91
+                            1  1.3
+                            1  2.79
+                            1  3
+                            1  3.04
+                            1  3.35
+                            1  3.37
+                            1  4.01
+                            1  4.16
+                            1  4.45
+                            1  4.49
+                            1  4.73
+                            1  4.78
+                            1  4.98
+                            1  5.025
+                            1  5.09
+                            1  5.17
+                            1  5.2
+                            1  5.38
+                            1  5.51
+                            1  5.855
+                            1  5.93
+                            2  6.21
+                            1  6.25
+                            1  6.33
+                            1  6.35
+                            1  6.42
+                            1  6.435
+                            1  6.46
+                            1  6.55
+                            1  6.57
+                            1  6.62
+                            1  6.68
+                            1  6.81
+                            1  7.03
+                            1  7.08
+                            1  7.105
+                            1  7.2
+                            1  7.23
+                            1  7.27
+                            1  7.41
+                            1  7.46
+                            1  7.47
+                            1  7.49
+                            1  7.53
+                            2  7.605
+                            1  7.61
+                            1  7.62
+                            1  7.66
+                            1  7.7
+                            1  7.795
+                            1  7.8
+                            1  7.825
+                            1  7.86
+                            2  7.96
+                            1  7.99
+                            1  8
+                            1  8.01
+                            1  8.1
+                            1  8.15
+                            1  8.16
+                            1  8.19
+                            1  8.2
+                            2  8.21
+                            1  8.215
+                            1  8.28
+                            1  8.29
+                            1  8.34
+                            1  8.35
+                            1  8.37
+                            1  8.38
+                            1  8.415
+                            1  8.43
+                            1  8.5
+                            2  8.58
+                            1  8.585
+                            1  8.6
+                            1  8.61
+                            1  8.63
+                            1  8.775
+                            1  8.805
+                            1  8.85
+                            1  8.9
+                            1  8.915
+                            1  8.96
+                            1  8.985
+                            1  9.02
+                            1  9.05
+                            2  9.08
+                            1  9.1
+                            1  9.145
+                            1  9.18
+                            1  9.2
+                            1  9.215
+                            1  9.26
+                            2  9.27
+                            2  9.28
+                            1  9.3
+                            1  9.33
+                            1  9.36
+                            1  9.365
+                            2  9.38
+                            1  9.4
+                            1  9.43
+                            1  9.44
+                            1  9.5
+                            1  9.51
+                            1  9.53
+                            1  9.55
+                            1  9.565
+                            1  9.6
+                            2  9.61
+                            1  9.62
+                            1  9.645
+                            2  9.72
+                            1  9.78
+                            1  9.8
+                            1  9.93
+                            1  9.97
+                            1  10
+                            1  10.05
+                            1  10.065
+                            1  10.07
+                            1  10.075
+                            1  10.1
+                            1  10.11
+                            1  10.15
+                            1  10.17
+                            1  10.18
+                            1  10.23
+                            1  10.24
+                            1  10.28
+                            1  10.35
+                            1  10.37
+                            1  10.38
+                            3  10.4
+                            1  10.42
+                            1  10.43
+                            2  10.5
+                            1  10.52
+                            1  10.615
+                            1  10.66
+                            1  10.68
+                            1  10.71
+                            1  10.86
+                            1  10.9
+                            1  10.93
+                            1  10.94
+                            1  10.98
+                            1  10.99
+                            1  11.11
+                            1  11.15
+                            1  11.21
+                            2  11.23
+                            1  11.26
+                            1  11.28
+                            1  11.34
+                            1  11.39
+                            2  11.5
+                            1  11.52
+                            1  11.55
+                            1  11.57
+                            1  11.61
+                            1  11.65
+                            1  11.7
+                            1  11.75
+                            1  11.85
+                            2  11.86
+                            1  11.91
+                            1  11.92
+                            1  11.93
+                            1  11.96
+                            1  12
+                            1  12.03
+                            1  12.07
+                            1  12.08
+                            1  12.12
+                            1  12.17
+                            1  12.19
+                            1  12.27
+                            2  12.35
+                            1  12.37
+                            1  12.39
+                            1  12.41
+                            1  12.5
+                            1  12.64
+                            1  12.85
+                            1  13
+                            1  13.02
+                            1  13.11
+                            1  13.18
+                            1  13.2
+                            1  13.21
+                            1  13.3
+                            1  13.36
+                            1  13.45
+                            1  13.5
+                            1  13.62
+                            2  13.7
+                            1  13.74
+                            1  13.75
+                            2  13.77
+                            1  13.79
+                            1  13.84
+                            1  13.87
+                            1  13.94
+                            1  14.01
+                            2  14.29
+                            1  14.31
+                            1  14.38
+                            1  14.46
+                            1  14.48
+                            1  14.6
+                            1  14.62
+                            1  14.64
+                            2  14.67
+                            1  14.68
+                            1  14.75
+                            1  14.754
+                            1  14.76
+                            1  14.84
+                            1  14.86
+                            1  14.89
+                            1  14.9
+                            1  14.93
+                            1  15.07
+                            1  15.12
+                            1  15.15
+                            2  15.17
+                            1  15.3
+                            1  15.43
+                            1  15.47
+                            1  15.48
+                            1  15.61
+                            1  15.68
+                            1  15.97
+                            1  16.05
+                            1  16.12
+                            1  16.13
+                            2  16.17
+                            1  16.3
+                            1  16.325
+                            1  16.35
+                            1  16.45
+                            1  16.51
+                            1  16.55
+                            1  16.85
+                            1  17.11
+                            1  17.18
+                            1  17.42
+                            1  17.52
+                            1  17.56
+                            1  17.58
+                            1  17.63
+                            1  17.915
+                            1  17.99
+                            1  18.02
+                            1  18.27
+                            1  18.28
+                            1  18.51
+                            1  18.849
+                            1  18.94
+                            1  19.15
+                            1  20.536
+                            1  23
+                            1  23.77
+                            1  24.4
+                            1  88.1
+                            1  2350
+                           17  .
+
+. sum weight                              
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      weight |        293    19.19776    136.7617        .91       2350
+
+. * hay dos observaciones: 1 con 88,0999 y 1 con 2350 -> reemplazamos con missing
+. replace weight = . if weight > 40 // eliminamos si pesa mas de 40kg 
+(2 real changes made, 2 to missing)
+
+. 
+. * Variable: height *** (en cm)
+. clonevar height = Tallaactualcm
+(20 missing values generated)
+
+. codebook height, tab(9999)      // chequeamos si hay valores fuera del rango
+
+---------------------------------------------------------------------------------
+height                                                            Talla actual cm
+---------------------------------------------------------------------------------
+
+                  Type: Numeric (double)
+
+                 Range: [5.9,107.1]                   Units: .01
+         Unique values: 207                       Missing .: 20/310
+
+            Tabulation: Freq.  Value
+                            1  5.9
+                            1  37.8
+                            1  47.5
+                            1  50
+                            1  51.4
+                            2  53
+                            1  55
+                            2  55.4
+                            1  55.5
+                            1  55.7
+                            1  56
+                            1  58
+                            1  58.2
+                            1  59.4
+                            1  59.5
+                            1  59.8
+                            1  60.1
+                            1  60.4
+                            1  60.6
+                            1  61
+                            1  61.5
+                            1  62
+                            5  62.5
+                            1  63.5
+                            1  64
+                            1  64.1
+                            3  64.5
+                            1  64.6
+                            1  64.8
+                            1  65
+                            3  65.1
+                            2  65.3
+                            1  66.1
+                            1  66.3
+                            1  66.5
+                            1  66.6
+                            1  66.8
+                            1  67.2
+                            1  67.3
+                            1  67.5
+                            1  67.8
+                            1  68
+                            2  68.4
+                            1  68.6
+                            1  68.8
+                            3  69
+                            1  69.2
+                            1  69.4
+                            1  69.5
+                            1  69.8
+                            2  70
+                            4  70.5
+                            1  70.55
+                            3  70.8
+                            1  70.9
+                            2  71
+                            1  71.1
+                            1  71.5
+                            1  71.8
+                            4  72
+                            1  72.2
+                            1  72.5
+                            1  72.6
+                            1  72.8
+                            2  72.9
+                            2  73
+                            1  73.1
+                            1  73.3
+                            4  73.4
+                            2  73.5
+                            1  73.6
+                            2  74
+                            1  74.3
+                            1  74.4
+                            5  74.5
+                            1  74.8
+                            1  74.9
+                            1  75
+                            2  75.1
+                            1  75.3
+                            1  75.6
+                            1  75.7
+                            1  76
+                            1  76.1
+                            1  76.4
+                            2  76.6
+                            1  76.8
+                            1  77
+                            1  77.2
+                            2  77.3
+                            2  77.5
+                            1  77.8
+                            3  78
+                            1  78.2
+                            2  78.4
+                            2  78.5
+                            3  79
+                            1  79.1
+                            1  79.3
+                            2  79.4
+                            1  79.5
+                            1  79.6
+                            2  79.8
+                            1  79.9
+                            3  80
+                            1  80.05
+                            1  80.08
+                            1  80.1
+                            1  80.6
+                            1  81
+                            1  81.1
+                            1  81.2
+                            1  81.3
+                            1  81.4
+                            1  81.5
+                            1  81.9
+                            1  82.2
+                            2  82.3
+                            2  82.4
+                            1  82.5
+                            1  82.6
+                            2  82.9
+                            1  83
+                            1  83.1
+                            1  83.3
+                            4  83.5
+                            1  83.6
+                            1  83.7
+                            1  84
+                            6  85
+                            1  85.4
+                            1  85.6
+                            2  86
+                            1  86.2
+                            1  86.5
+                            2  86.6
+                            1  86.8
+                            1  87.01
+                            1  87.2
+                            1  87.5
+                            1  87.6
+                            1  88.1
+                            1  88.3
+                            1  88.4
+                            2  88.6
+                            2  88.7
+                            1  88.8
+                            3  88.9
+                            1  89
+                            1  89.1
+                            1  89.4
+                            1  89.8
+                            2  90.1
+                            3  91.1
+                            1  91.8
+                            2  91.9
+                            1  92
+                            1  92.04
+                            1  92.1
+                            1  92.11
+                            1  92.2
+                            1  93.7
+                            1  94
+                            1  94.1
+                            1  94.4
+                            3  94.5
+                            2  95
+                            1  95.3
+                            1  95.5
+                            2  95.8
+                            1  96
+                            1  96.02
+                            1  96.2
+                            1  96.3
+                            2  97
+                            1  97.3
+                            2  97.5
+                            1  97.7
+                            1  97.8
+                            4  98.1
+                            2  98.3
+                            1  98.8
+                            1  99.08
+                            1  99.1
+                            3  99.4
+                            1  99.6
+                            1  100.09
+                            1  100.4
+                            1  100.8
+                            1  101
+                            1  101.4
+                            1  101.5
+                            1  101.6
+                            1  101.9
+                            1  102
+                            1  102.1
+                            1  102.2
+                            1  102.5
+                            1  103.9
+                            1  104.2
+                            1  104.3
+                            1  104.4
+                            2  105
+                            1  105.1
+                            1  106
+                            1  107
+                            1  107.1
+                           20  .
+
+. sum height 
+
+    Variable |        Obs        Mean    Std. dev.       Min        Max
+-------------+---------------------------------------------------------
+      height |        290    79.88769    14.00498        5.9      107.1
+
+. * hay una observacion con 5,9 -> reemplazamos con missing       
+. replace height = . if height < 25
+(1 real change made, 1 to missing)
+
+. 
+. * Variable: measure     
+. gen measure = " "       //no se sabe cómo se midieron los niños/as
+
+. tab measure
+
+    measure |      Freq.     Percent        Cum.
+------------+-----------------------------------
+            |        310      100.00      100.00
+------------+-----------------------------------
+      Total |        310      100.00
+
+. 
+. * Variable: oedema 
+. gen  oedema = "n"  
+
+. 
+. * Variable: sampling weight
+. gen  sw = 1     
+
+. 
+. * Compute z-score
+. adopath + "$path_ado/igrowup_stata"
+  [1]  (BASE)      "C:\Program Files\StataNow19\ado\base/"
+  [2]  (SITE)      "C:\Program Files\StataNow19\ado\site/"
+  [3]              "."
+  [4]  (PERSONAL)  "C:\Users\girel\ado\personal/"
+  [5]  (PLUS)      "C:\Users\girel\ado\plus/"
+  [6]  (OLDPLACE)  "c:\ado/"
+  [7]              "C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proye
+> cto\ado/igrowup_stata"
+
+. 
+. gen str100 reflib = "$path_ado/igrowup_stata"
+
+. lab var reflib "Directory of reference tables"
+
+. 
+. gen str100 datalib = "$path_out" 
+
+. lab var datalib "Directory for datafiles"
+
+. 
+. * Nombre del archivo de salida que generará la OMS
+. gen str30 datalab = "children_nutri" 
+
+. lab var datalab "Working file"
+
+. 
+. * Creamos nuevas variable para utilizar en el comando igrowup
+. clonevar gender = genero
+
+. clonevar age_ch_months = edad_meses
+(5 missing values generated)
+
+. 
+. igrowup_restricted reflib datalib datalab gender age_ch_months ageunit weight h
+> eight measure oedema sw
+
+Please wait, programme is running.............
+
+..............................................
+Note: z-scores are flagged according to the following rules:
+ 
+                            _zwfl = . if (_zwfl < -5 or _zwfl >5)
+                            _zlen = . if (_zlen < -6 or _zlen >6)
+                            _zwei = . if (_zwei < -6 or _zwei >5)
+                            _zbmi = . if (_zbmi < -5 or _zbmi >5)
+                            
+file C:\Users\girel\Dropbox\Doctorado\Impact
+    Evaluation\JPAL\Proyecto\out_data\children_nutri_z_rc.dta saved
+Note 1:     Original data plus z-scores are written to
+            C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proyecto\out_
+> data\children_nutri_z_rc.dta
+                            
+                            
+Note 2:     Original data plus z-scores are written to
+            C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proyecto\out_
+> data\children_nutri_z_rc.xls
+                            
+
+Please wait, programme is calculating prevalences.............
+
+..............................................
+
+Set 1:            Sexes combined
+
+Age groups        Weight-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI     Mean      SD
+Total     263     1.1       0     2.6     6.8     3.6    10.1    -.51    1.08
+  0-5      23       0       0     2.2     8.7       0    22.4    -.17    1.23
+ 6-11      36       0       0     1.4     5.6       0    14.4    -.24    1.11
+12-23      84     2.4       0     6.2     9.5     2.7    16.4     -.7    1.07
+24-35      48     2.1       0     7.2     6.3       0    14.1    -.69    1.15
+36-47      31       0       0     1.6     3.2       0    11.1    -.24     .94
+48-60      41       0       0     1.2     4.9       0    12.7    -.51     .93
+
+Age groups        Length/height-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI     Mean      SD
+Total     263       8     4.5    11.5    31.6    25.8    37.4   -1.39    1.25
+  0-5      23     4.3       0    14.9      13       0      29    -.55     1.4
+ 6-11      36       0       0     1.4    13.9     1.2    26.6    -.88    1.22
+12-23      84    10.7     3.5    17.9      44    32.8    55.3    -1.7    1.22
+24-35      48     8.3       0    17.2    39.6    24.7    54.5   -1.62    1.27
+36-47      31    12.9       0    26.3    25.8     8.8    42.8   -1.43    1.09
+48-60      41     7.3       0    16.5    26.8      12    41.6   -1.35    1.04
+
+Age groups        Weight-for-length/height
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI    %>1SD     95%
+Total     263      .4       0     1.3       3      .8     5.3    28.1    22.5
+  0-5      23       0       0     2.2       0       0     2.2    26.1       6
+ 6-11      36       0       0     1.4     5.6       0    14.4    27.8    11.8
+12-23      84     1.2       0     4.1       6      .3    11.6    26.2    16.2
+24-35      48       0       0       1     2.1       0     7.2      25    11.7
+36-47      31       0       0     1.6       0       0     1.6    45.2      26
+48-60      41       0       0     1.2       0       0     1.2    24.4      10
+
+          CI    %>2SD     95%     CI    %>3SD     95%     CI     Mean      SD
+Total    33.8     6.8     3.6    10.1     1.9      .1     3.7     .37    1.17
+  0-5    46.2     4.3       0    14.9       0       0     2.2     .43     .94
+ 6-11    43.8    11.1       0    22.8     2.8       0     9.5      .4    1.26
+12-23    36.2     7.1       1    13.2       0       0      .6     .16    1.34
+24-35    38.3     4.2       0    10.9     2.1       0     7.2     .26    1.02
+36-47    64.3     6.5       0    16.7     3.2       0    11.1     .86    1.03
+48-60    38.8     7.3       0    16.5     4.9       0    12.7     .48    1.01
+
+Age groups        BMI-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI    %>1SD     95%
+Total     263      .8       0       2     3.4       1     5.8    32.7    26.8
+  0-5      23       0       0     2.2     4.3       0    14.9    17.4       0
+ 6-11      36       0       0     1.4     5.6       0    14.4    27.8    11.8
+12-23      84     2.4       0     6.2     7.1       1    13.2    35.7    24.9
+24-35      48       0       0       1       0       0       1    29.2    15.3
+36-47      31       0       0     1.6       0       0     1.6    51.6    32.4
+48-60      41       0       0     1.2       0       0     1.2    29.3    14.1
+
+          CI    %>2SD     95%     CI    %>3SD     95%     CI     Mean      SD
+Total    38.6     9.5     5.8    13.2     1.9      .1     3.7      .5    1.21
+  0-5    35.1     4.3       0    14.9       0       0     2.2     .21     .97
+ 6-11    43.8     8.3       0    18.8     2.8       0     9.5     .36    1.32
+12-23    46.6    15.5     7.1    23.8       0       0      .6     .45    1.44
+24-35    43.1     6.3       0    14.1     2.1       0     7.2      .5       1
+36-47    70.8     6.5       0    16.7     3.2       0    11.1    1.01    1.03
+48-60    44.4     7.3       0    16.5     4.9       0    12.7     .52       1
+
+Set 2:            Males
+
+Age groups        Weight-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI     Mean      SD
+Total     132     1.5       0       4    10.6       5    16.2    -.61    1.18
+  0-5      11       0       0     4.5    18.2       0    45.5    -.44    1.57
+ 6-11      25       0       0       2       4       0    13.7    -.23    1.19
+12-23      34     5.9       0    15.3    17.6     3.4    31.9    -.97    1.16
+24-35      26       0       0     1.9     7.7       0    19.9    -.82    1.16
+36-47      15       0       0     3.3     6.7       0    22.6    -.24    1.05
+48-60      21       0       0     2.4     9.5       0    24.5    -.56     .94
+
+Age groups        Length/height-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI     Mean      SD
+Total     132     9.8     4.4    15.3    34.8    26.3    43.4   -1.49    1.33
+  0-5      11     9.1       0    30.6    18.2       0    45.5    -.79    1.76
+ 6-11      25       0       0       2      12       0    26.7    -.89    1.22
+12-23      34    17.6     3.4    31.9    55.9    37.7      74      -2    1.36
+24-35      26     7.7       0    19.9    46.2    25.1    67.2   -1.76    1.21
+36-47      15    13.3       0    33.9    26.7       1    52.4   -1.37    1.13
+48-60      21     9.5       0    24.5    28.6     6.9    50.3    -1.5    1.13
+
+Age groups        Weight-for-length/height
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI    %>1SD     95%
+Total     132      .8       0     2.6       3       0     6.3      28      20
+  0-5      11       0       0     4.5       0       0     4.5    18.2       0
+ 6-11      25       0       0       2       4       0    13.7      32    11.7
+12-23      34     2.9       0    10.1     8.8       0    19.8    17.6     3.4
+24-35      26       0       0     1.9       0       0     1.9    23.1       5
+36-47      15       0       0     3.3       0       0     3.3      60    31.9
+48-60      21       0       0     2.4       0       0     2.4    28.6     6.9
+
+          CI    %>2SD     95%     CI    %>3SD     95%     CI     Mean      SD
+Total    36.1     8.3     3.2    13.4     2.3       0     5.2     .32    1.24
+  0-5    45.5     9.1       0    30.6       0       0     4.5     .29    1.11
+ 6-11    52.3      12       0    26.7       4       0    13.7     .44     1.3
+12-23    31.9     8.8       0    19.8       0       0     1.5       0    1.47
+24-35    41.2     7.7       0    19.9     3.8       0    13.2     .19    1.09
+36-47    88.1     6.7       0    22.6       0       0     3.3     .81    1.09
+48-60    50.3     4.8       0    16.3     4.8       0    16.3     .55       1
+
+Age groups        BMI-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI    %>1SD     95%
+Total     132      .8       0     2.6     4.5      .6     8.5    36.4    27.8
+  0-5      11       0       0     4.5     9.1       0    30.6    18.2       0
+ 6-11      25       0       0       2       4       0    13.7      32    11.7
+12-23      34     2.9       0    10.1    11.8       0    24.1    38.2    20.4
+24-35      26       0       0     1.9       0       0     1.9    26.9       8
+36-47      15       0       0     3.3       0       0     3.3      60    31.9
+48-60      21       0       0     2.4       0       0     2.4    42.9    19.3
+
+          CI    %>2SD     95%     CI    %>3SD     95%     CI     Mean      SD
+Total    44.9     7.6     2.7    12.5     2.3       0     5.2     .47    1.28
+  0-5    45.5     9.1       0    30.6       0       0     4.5     .02    1.19
+ 6-11    52.3       8       0    20.6       4       0    13.7     .39    1.37
+12-23      56    11.8       0    24.1       0       0     1.5     .33    1.59
+24-35    45.9     3.8       0    13.2     3.8       0    13.2     .47    1.06
+36-47    88.1     6.7       0    22.6       0       0     3.3     .97    1.09
+48-60    66.4     4.8       0    16.3     4.8       0    16.3     .66     .99
+
+Set 3:            Females
+
+Age groups        Weight-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI     Mean      SD
+Total     131      .8       0     2.6     3.1       0     6.4     -.4     .97
+  0-5      12       0       0     4.2       0       0     4.2     .09     .79
+ 6-11      11       0       0     4.5     9.1       0    30.6    -.26     .99
+12-23      50       0       0       1       4       0    10.4    -.52     .97
+24-35      22     4.5       0    15.5     4.5       0    15.5    -.54    1.14
+36-47      16       0       0     3.1       0       0     3.1    -.23     .85
+48-60      20       0       0     2.5       0       0     2.5    -.47     .95
+
+Age groups        Length/height-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI     Mean      SD
+Total     131     6.1     1.6    10.6    28.2    20.2    36.3   -1.28    1.16
+  0-5      12       0       0     4.2     8.3       0    28.1    -.33     .99
+ 6-11      11       0       0     4.5    18.2       0    45.5    -.86    1.29
+12-23      50       6       0    13.6      36    21.7    50.3    -1.5    1.07
+24-35      22     9.1       0    23.4    31.8    10.1    53.6   -1.46    1.36
+36-47      16    12.5       0    31.8      25      .7    49.3   -1.49     1.1
+48-60      20       5       0    17.1      25     3.5    46.5   -1.18     .94
+
+Age groups        Weight-for-length/height
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI    %>1SD     95%
+Total     131       0       0      .4     3.1       0     6.4    28.2    20.2
+  0-5      12       0       0     4.2       0       0     4.2    33.3     2.5
+ 6-11      11       0       0     4.5     9.1       0    30.6    18.2       0
+12-23      50       0       0       1       4       0    10.4      32    18.1
+24-35      22       0       0     2.3     4.5       0    15.5    27.3     6.4
+36-47      16       0       0     3.1       0       0     3.1    31.3     5.4
+48-60      20       0       0     2.5       0       0     2.5      20       0
+
+          CI    %>2SD     95%     CI    %>3SD     95%     CI     Mean      SD
+Total    36.3     5.3     1.1     9.6     1.5       0       4     .41     1.1
+  0-5    64.2       0       0     4.2       0       0     4.2     .56     .78
+ 6-11    45.5     9.1       0    30.6       0       0     4.5     .32    1.22
+12-23    45.9       6       0    13.6       0       0       1     .27    1.24
+24-35    48.2       0       0     2.3       0       0     2.3     .35     .95
+36-47    57.1     6.3       0    21.2     6.3       0    21.2     .91    1.01
+48-60      40      10       0    25.6       5       0    17.1     .41    1.05
+
+Age groups        BMI-for-age
+
+            N  %<-3SD     95%     CI   %<-2SD     95%     CI    %>1SD     95%
+Total     131      .8       0     2.6     2.3       0     5.2      29    20.9
+  0-5      12       0       0     4.2       0       0     4.2    16.7       0
+ 6-11      11       0       0     4.5     9.1       0    30.6    18.2       0
+12-23      50       2       0     6.9       4       0    10.4      34    19.9
+24-35      22       0       0     2.3       0       0     2.3    31.8    10.1
+36-47      16       0       0     3.1       0       0     3.1    43.8    16.3
+48-60      20       0       0     2.5       0       0     2.5      15       0
+
+          CI    %>2SD     95%     CI    %>3SD     95%     CI     Mean      SD
+Total    37.2    11.5     5.6    17.3     1.5       0       4     .54    1.14
+  0-5    41.9       0       0     4.2       0       0     4.2     .39     .73
+ 6-11    45.5     9.1       0    30.6       0       0     4.5     .31    1.28
+12-23    48.1      18     6.4    29.6       0       0       1     .53    1.33
+24-35    53.6     9.1       0    23.4       0       0     2.3     .55     .94
+36-47    71.2     6.3       0    21.2     6.3       0    21.2    1.04       1
+48-60    33.1      10       0    25.6       5       0    17.1     .38    1.01
+ 
+Note:       Prevalences are written to
+            C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proyecto\out_
+> data\children_nutri_prev_rc.xls
+
+. 
+. use "$path_out/children_nutri_z_rc.dta", clear 
+
+. 
+. /*  
+> Se crearon nuevas variables:
+> _zwei: Z-score de Peso para la Edad (bajo peso).
+> 
+> _zlen: Z-score de Talla para la Edad (desnutrición crónica / retraso en el crec
+> imiento).
+> 
+> _zwfl: Z-score de Peso para la Talla (desnutrición aguda).
+> 
+> _zbmi: Z-score de Índice de Masa Corporal para la Edad.
+> */
+. 
+. gen haz = _zlen
+(26 missing values generated)
+
+. tab _flen, m                      // cuántos fueron marcados como implausibles
+
+      =1 if |
+(_zlen < -6 |
+| _zlen >6) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        278       89.68       89.68
+          1 |          6        1.94       91.61
+          . |         26        8.39      100.00
+------------+-----------------------------------
+      Total |        310      100.00
+
+. count if missing(haz)
+  26
+
+. 
+. * Muestra de referencia: menores de 24 meses con HAZ válido
+. keep if age_ch_months < 24 & !missing(haz)     // sensibilidad: <= 24
+(151 observations deleted)
+
+. * Reemplazar valores implausibles según la convención OMS
+. replace haz = . if _flen == 1   // o reemplazar si haz < -6 | haz > 6
+(5 real changes made, 5 to missing)
+
+. count
+  159
+
+. * Creamos un límite superior más estricto que el inferior: un HAZ de -4 o -5
+. * es plausible en desnutrición severa, uno de +4 en esta población no.
+. local tope_sup =  4
+
+. local tope_inf = -5
+
+. 
+. gen outlier = (haz > `tope_sup' | haz < `tope_inf') if !missing(haz)
+(5 missing values generated)
+
+. tab outlier,m
+
+    outlier |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        153       96.23       96.23
+          1 |          1        0.63       96.86
+          . |          5        3.14      100.00
+------------+-----------------------------------
+      Total |        159      100.00
+
+. 
+. replace haz = . if outlier == 1
+(1 real change made, 1 to missing)
+
+. 
+. 
+. /*
+> 
+> 2.3 Guardamos la base de datos con las varibales de interés
+> 
+> */
+. 
+. keep id comunidad parroquia genero edad_meses haz 
+
+. 
+. save data.dta, replace
+file data.dta saved
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\girel\Dropbox\Doctorado\Impact Evaluation\JPAL\Proyecto\pro
+> cessing.log
+  log type:  text
+ closed on:  22 Oct 2026, 20:29:24
+---------------------------------------------------------------------------------
